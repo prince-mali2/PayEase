@@ -1,0 +1,88 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}{{ title }} - PayEase{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4><i class="bi bi-cash-coin"></i> {{ title }}</h4>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="id_employee" class="form-label">Employee *</label>
+                    {{ form.employee }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="id_month" class="form-label">Month *</label>
+                    {{ form.month }}
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="id_year" class="form-label">Year *</label>
+                    {{ form.year }}
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="id_base_salary" class="form-label">Base Salary *</label>
+                {{ form.base_salary }}
+            </div>
+            <hr>
+            <h5>Attendance Details</h5>
+            <div class="row">
+                <div class="col-md-3 mb-3">
+                    <label for="id_total_working_days" class="form-label">Total Working Days</label>
+                    {{ form.total_working_days }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="id_days_present" class="form-label">Days Present</label>
+                    {{ form.days_present }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="id_days_absent" class="form-label">Days Absent</label>
+                    {{ form.days_absent }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="id_days_on_leave" class="form-label">Days on Leave</label>
+                    {{ form.days_on_leave }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_half_days" class="form-label">Half Days</label>
+                    {{ form.half_days }}
+                </div>
+            </div>
+            <hr>
+            <h5>Allowances & Deductions</h5>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_allowances" class="form-label">Allowances</label>
+                    {{ form.allowances }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="id_deductions" class="form-label">Deductions</label>
+                    {{ form.deductions }}
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'salary_list' %}" class="btn btn-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.querySelectorAll('input, select').forEach(el => {
+        if (!el.classList.contains('form-control') && !el.classList.contains('form-select')) {
+            el.classList.add('form-control');
+        }
+    });
+</script>
+{% endblock %}
+
+

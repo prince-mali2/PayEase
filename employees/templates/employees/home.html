@@ -1,0 +1,227 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}PayEase - Employee Payment Platform{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, rgba(74,144,226,0.15) 0%, rgba(80,200,120,0.15) 100%);
+        border-radius: 18px;
+        padding: 4rem 3rem;
+        overflow: hidden;
+        position: relative;
+    }
+    .hero-section::after {
+        content: "";
+        position: absolute;
+        top: -40px;
+        right: -60px;
+        width: 260px;
+        height: 260px;
+        background: rgba(74,144,226,0.25);
+        border-radius: 50%;
+        filter: blur(0px);
+    }
+    .hero-section::before {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -80px;
+        width: 320px;
+        height: 320px;
+        background: rgba(80,200,120,0.2);
+        border-radius: 50%;
+        filter: blur(0px);
+    }
+    .hero-section h1 {
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--dark-color);
+    }
+    .hero-section p {
+        font-size: 1.1rem;
+        color: rgba(44, 62, 80, 0.8);
+    }
+    .feature-card {
+        background: white;
+        border-radius: 14px;
+        padding: 1.8rem;
+        box-shadow: 0 18px 35px rgba(31, 45, 61, 0.08);
+        height: 100%;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 24px 45px rgba(31, 45, 61, 0.12);
+    }
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(74, 144, 226, 0.15);
+        color: var(--primary-color);
+        font-size: 1.5rem;
+    }
+    .stat-card {
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(74,144,226,0.95) 0%, rgba(53,122,189,0.95) 100%);
+        color: white;
+        padding: 2rem;
+        box-shadow: 0 18px 45px rgba(53, 122, 189, 0.25);
+    }
+    .testimonial-card {
+        background: white;
+        border-radius: 14px;
+        padding: 1.6rem 2rem;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.07);
+        height: 100%;
+    }
+    .badge-soft {
+        padding: 0.4rem 1.1rem;
+        border-radius: 999px;
+        background: rgba(74, 144, 226, 0.12);
+        color: var(--primary-color);
+        font-weight: 600;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero-section mb-5">
+    <div class="row align-items-center position-relative">
+        <div class="col-lg-7">
+            <span class="badge-soft mb-3">Smart Payroll, Simplified</span>
+            <h1>All-in-one platform for managing employee payments</h1>
+            <p class="mt-3">Automate payroll, track attendance, and deliver payment transparency across your organisation. Built for finance teams and people-first companies.</p>
+            <div class="mt-4 d-flex flex-wrap gap-3">
+                <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+                <a href="{% url 'register' %}" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-person-plus"></i> Create Admin Account
+                </a>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-4 mt-4">
+                <div class="d-flex align-items-center">
+                    <div class="feature-icon me-3"><i class="bi bi-shield-check"></i></div>
+                    <div>
+                        <strong>Role-based Access</strong>
+                        <p class="mb-0 small text-muted">Secure dashboards for Admins and Employees</p>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="feature-icon me-3"><i class="bi bi-lightning-charge"></i></div>
+                    <div>
+                        <strong>Fast Payroll</strong>
+                        <p class="mb-0 small text-muted">Cut processing time with automated calculations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 mt-4 mt-lg-0">
+            <div class="stat-card text-center">
+                <p class="text-uppercase small mb-2">Platform Snapshot</p>
+                <div class="row">
+                    <div class="col-6 border-end border-white border-opacity-25">
+                        <h2 class="fw-bold">100%</h2>
+                        <p class="mb-0 small">Payment Accuracy</p>
+                    </div>
+                    <div class="col-6">
+                        <h2 class="fw-bold">24/7</h2>
+                        <p class="mb-0 small">Employee Access</p>
+                    </div>
+                </div>
+                <hr class="border border-white border-opacity-25 my-3">
+                <p class="small mb-0">Trusted workflow for finance and HR teams to stay compliant and in control.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <span class="badge-soft mb-2">Platform Features</span>
+            <h2 class="h3 fw-bold">Everything you need to close payroll confidently</h2>
+            <p class="text-muted">Centralise employee data, automate salary calculations, and communicate payment status instantly.</p>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for feature in features %}
+        <div class="col-md-6 col-lg-3">
+            <div class="feature-card">
+                <div class="feature-icon mb-3"><i class="bi {{ feature.icon }}"></i></div>
+                <h5 class="fw-bold">{{ feature.title }}</h5>
+                <p class="text-muted mb-0">{{ feature.description }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="mb-5">
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="feature-card h-100">
+                <h4 class="fw-bold mb-3">Built for modern finance operations</h4>
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-check2-circle text-success me-3 fs-5"></i>
+                        <div>
+                            <strong>Centralised dashboard</strong>
+                            <p class="mb-0 text-muted">Monitor active employees, outstanding salaries, and payment momentum at a glance.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start mb-3">
+                        <i class="bi bi-check2-circle text-success me-3 fs-5"></i>
+                        <div>
+                            <strong>Attendance-driven payroll</strong>
+                            <p class="mb-0 text-muted">Leverage attendance, leave, and half-day records to generate precise net salaries.</p>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-start">
+                        <i class="bi bi-check2-circle text-success me-3 fs-5"></i>
+                        <div>
+                            <strong>Transparent payment history</strong>
+                            <p class="mb-0 text-muted">Log payment methods, transaction IDs, and keep everyone informed through notifications.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="feature-card h-100">
+                <h4 class="fw-bold mb-3">What teams are saying</h4>
+                <div class="row g-3">
+                    {% for testimonial in testimonials %}
+                    <div class="col-12">
+                        <div class="testimonial-card h-100">
+                            <p class="fst-italic text-muted">{{ testimonial.quote }}</p>
+                            <p class="mb-0 fw-semibold">{{ testimonial.name }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="mb-5 text-center">
+    <div class="feature-card py-4 px-5 mx-auto" style="max-width: 720px;">
+        <h3 class="fw-bold mb-3">Ready to transform your payroll experience?</h3>
+        <p class="text-muted mb-4">Create an admin account to start onboarding employees, recording attendance, and processing payments in minutes.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                <i class="bi bi-rocket"></i> Launch Admin Console
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-person-check"></i> Employee Sign In
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

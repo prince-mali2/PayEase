@@ -1,0 +1,107 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Salary Detail - PayEase{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-cash-coin"></i> Salary Details</h2>
+    <div>
+        {% if user.is_admin_user %}
+            <a href="{% url 'salary_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-info-circle"></i> Employee Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Employee:</strong> {{ salary.employee.full_name }}</p>
+                <p><strong>Employee ID:</strong> {{ salary.employee.employee_id }}</p>
+                <p><strong>Department:</strong> {{ salary.employee.department }}</p>
+                <p><strong>Month:</strong> {{ salary.get_month_display }} {{ salary.year }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-calculator"></i> Salary Calculation</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Base Salary:</strong> ₹{{ salary.base_salary|floatformat:2 }}</p>
+                <p><strong>Total Working Days:</strong> {{ salary.total_working_days }}</p>
+                <p><strong>Days Present:</strong> {{ salary.days_present }}</p>
+                <p><strong>Days Absent:</strong> {{ salary.days_absent }}</p>
+                <p><strong>Days on Leave:</strong> {{ salary.days_on_leave }}</p>
+                <p><strong>Half Days:</strong> {{ salary.half_days }}</p>
+                <p><strong>Salary per Day:</strong> ₹{{ salary.salary_per_day|floatformat:2 }}</p>
+                <p><strong>Calculated Amount:</strong> ₹{{ salary.calculated_amount|floatformat:2 }}</p>
+                <p><strong>Allowances:</strong> ₹{{ salary.allowances|floatformat:2 }}</p>
+                <p><strong>Deductions:</strong> ₹{{ salary.deductions|floatformat:2 }}</p>
+                <hr>
+                <h4><strong>Net Salary: ₹{{ salary.net_salary|floatformat:2 }}</strong></h4>
+                <p>
+                    <strong>Status:</strong>
+                    {% if salary.is_paid %}
+                        <span class="badge bg-success">Paid</span>
+                    {% else %}
+                        <span class="badge bg-warning">Pending</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if payment %}
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5><i class="bi bi-credit-card"></i> Payment Information</h5>
+        </div>
+        <div class="card-body">
+            <p><strong>Payment Date:</strong> {{ payment.payment_date }}</p>
+            <p><strong>Payment Method:</strong> {{ payment.get_payment_method_display }}</p>
+            {% if payment.transaction_id %}
+                <p><strong>Transaction ID:</strong> {{ payment.transaction_id }}</p>
+            {% endif %}
+            {% if payment.notes %}
+                <p><strong>Notes:</strong> {{ payment.notes }}</p>
+            {% endif %}
+            <p><strong>Processed By:</strong> {{ payment.processed_by.username }}</p>
+        </div>
+    </div>
+{% endif %}
+
+{% if user.is_admin_user %}
+    <div class="card mt-4">
+        <div class="card-body">
+            {% if not salary.is_paid %}
+                <a href="{% url 'payment_process' salary.pk %}" class="btn btn-success">
+                    <i class="bi bi-check-circle"></i> Process Payment
+                </a>
+                <form method="post" action="{% url 'salary_calculate' salary.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-calculator"></i> Recalculate Salary
+                    </button>
+                </form>
+            {% else %}
+                <form method="post" action="{% url 'payment_mark_unpaid' salary.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">
+                        <i class="bi bi-x-circle"></i> Mark as Unpaid
+                    </button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+

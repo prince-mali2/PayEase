@@ -1,0 +1,66 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Salaries - PayEase{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-cash-coin"></i> Salary Management</h2>
+    <a href="{% url 'salary_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Create Salary Record
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Base Salary</th>
+                        <th>Net Salary</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for salary in salaries %}
+                        <tr>
+                            <td>{{ salary.employee.full_name }}</td>
+                            <td>{{ salary.get_month_display }}</td>
+                            <td>{{ salary.year }}</td>
+                            <td>₹{{ salary.base_salary|floatformat:2 }}</td>
+                            <td>₹{{ salary.net_salary|floatformat:2 }}</td>
+                            <td>
+                                {% if salary.is_paid %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'salary_detail' salary.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {% if not salary.is_paid %}
+                                    <a href="{% url 'salary_calculate' salary.pk %}" class="btn btn-sm btn-warning">
+                                        <i class="bi bi-calculator"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No salary records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,75 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Employees - PayEase{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-people"></i> Employee Management</h2>
+    <a href="{% url 'employee_create' %}" class="btn btn-primary">
+        <i class="bi bi-person-plus"></i> Add Employee
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <form method="get" class="d-flex">
+            <input type="text" name="search" class="form-control me-2" placeholder="Search employees..." value="{{ search }}">
+            <button type="submit" class="btn btn-outline-light">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </form>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Base Salary</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <td>{{ employee.employee_id }}</td>
+                            <td>{{ employee.full_name }}</td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.department }}</td>
+                            <td>₹{{ employee.base_salary|floatformat:2 }}</td>
+                            <td>
+                                {% if employee.is_active %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'employee_detail' employee.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'employee_delete' employee.pk %}" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center">No employees found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

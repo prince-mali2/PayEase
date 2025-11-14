@@ -1,0 +1,138 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Reports - PayEase{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-file-earmark-bar-graph"></i> Reports</h2>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h5>Generate Report</h5>
+    </div>
+    <div class="card-body">
+        <form method="get">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="type" class="form-label">Report Type</label>
+                    <select name="type" id="type" class="form-select" required>
+                        <option value="">Select Type</option>
+                        <option value="monthly" {% if report_type == 'monthly' %}selected{% endif %}>Monthly</option>
+                        <option value="annual" {% if report_type == 'annual' %}selected{% endif %}>Annual</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3" id="monthField" style="display: none;">
+                    <label for="month" class="form-label">Month</label>
+                    <select name="month" id="month" class="form-select">
+                        <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
+                        <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
+                        <option value="3" {% if month == 3 %}selected{% endif %}>March</option>
+                        <option value="4" {% if month == 4 %}selected{% endif %}>April</option>
+                        <option value="5" {% if month == 5 %}selected{% endif %}>May</option>
+                        <option value="6" {% if month == 6 %}selected{% endif %}>June</option>
+                        <option value="7" {% if month == 7 %}selected{% endif %}>July</option>
+                        <option value="8" {% if month == 8 %}selected{% endif %}>August</option>
+                        <option value="9" {% if month == 9 %}selected{% endif %}>September</option>
+                        <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
+                        <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
+                        <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="year" class="form-label">Year</label>
+                    <input type="number" name="year" id="year" class="form-control" 
+                           value="{% if year %}{{ year }}{% else %}{{ 'now'|date:'Y' }}{% endif %}" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Generate Report
+            </button>
+        </form>
+    </div>
+</div>
+
+{% if report_type == 'monthly' %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Monthly Report - {{ month|date:"F" }} {{ year }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-success">
+                <strong>Total Expenditure:</strong> ₹{{ total_expenditure|floatformat:2 }}
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Net Salary</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for salary in salaries %}
+                            <tr>
+                                <td>{{ salary.employee.full_name }}</td>
+                                <td>₹{{ salary.net_salary|floatformat:2 }}</td>
+                                <td>
+                                    {% if salary.is_paid %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% elif report_type == 'annual' %}
+    <div class="card">
+        <div class="card-header">
+            <h5>Annual Report - {{ year }}</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-success">
+                <strong>Total Annual Expenditure:</strong> ₹{{ total_expenditure|floatformat:2 }}
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Salary</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for data in monthly_data %}
+                            <tr>
+                                <td>{{ data.month }}</td>
+                                <td>₹{{ data.total|floatformat:2 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('type').addEventListener('change', function() {
+        const monthField = document.getElementById('monthField');
+        if (this.value === 'monthly') {
+            monthField.style.display = 'block';
+        } else {
+            monthField.style.display = 'none';
+        }
+    });
+    // Trigger on load
+    if (document.getElementById('type').value === 'monthly') {
+        document.getElementById('monthField').style.display = 'block';
+    }
+</script>
+{% endblock %}
+

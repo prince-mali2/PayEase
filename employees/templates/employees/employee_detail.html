@@ -1,0 +1,98 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Employee Detail - PayEase{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-person"></i> {{ employee.full_name }}</h2>
+    <div>
+        <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-warning">
+            <i class="bi bi-pencil"></i> Edit
+        </a>
+        <a href="{% url 'employee_list' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-info-circle"></i> Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Employee ID:</strong> {{ employee.employee_id }}</p>
+                <p><strong>Full Name:</strong> {{ employee.full_name }}</p>
+                <p><strong>Email:</strong> {{ employee.email }}</p>
+                <p><strong>Phone:</strong> {{ employee.phone }}</p>
+                <p><strong>Address:</strong> {{ employee.address|default:"N/A" }}</p>
+                <p><strong>Date of Joining:</strong> {{ employee.date_of_joining }}</p>
+                <p><strong>Designation:</strong> {{ employee.designation }}</p>
+                <p><strong>Department:</strong> {{ employee.department }}</p>
+                <p><strong>Base Salary:</strong> ₹{{ employee.base_salary|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="bi bi-bank"></i> Bank Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Bank Name:</strong> {{ employee.bank_name }}</p>
+                <p><strong>Account Number:</strong> {{ employee.account_number }}</p>
+                <p><strong>IFSC Code:</strong> {{ employee.ifsc_code }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5><i class="bi bi-cash-coin"></i> Salary History</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Year</th>
+                        <th>Net Salary</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for salary in salaries %}
+                        <tr>
+                            <td>{{ salary.get_month_display }}</td>
+                            <td>{{ salary.year }}</td>
+                            <td>₹{{ salary.net_salary|floatformat:2 }}</td>
+                            <td>
+                                {% if salary.is_paid %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% else %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'salary_detail' salary.pk %}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No salary records found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

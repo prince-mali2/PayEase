@@ -1,0 +1,48 @@
+{% extends 'employees/base.html' %}
+
+{% block title %}Transaction History - PayEase{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="bi bi-clock-history"></i> Transaction History</h2>
+
+{% if employee %}
+    <div class="alert alert-info">
+        <strong>Employee:</strong> {{ employee.full_name }} ({{ employee.employee_id }})
+    </div>
+{% endif %}
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Employee</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Payment Method</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                        <tr>
+                            <td>{{ transaction.transaction_date }}</td>
+                            <td>{{ transaction.employee.full_name }}</td>
+                            <td>₹{{ transaction.amount|floatformat:2 }}</td>
+                            <td>{{ transaction.description }}</td>
+                            <td>{{ transaction.payment.get_payment_method_display }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No transactions found</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
