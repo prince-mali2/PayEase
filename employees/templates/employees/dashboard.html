@@ -3,9 +3,15 @@
 {% block title %}Dashboard - PayEase{% endblock %}
 
 {% block content %}
+
 {% if user.is_admin_user %}
-    <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h2>
-    
+
+    <!-- Admin Dashboard -->
+    <h2 class="mb-4">
+        <i class="bi bi-speedometer2"></i> Admin Dashboard
+    </h2>
+
+    <!-- Stats Section -->
     <div class="row">
         <div class="col-md-3">
             <div class="stat-card">
@@ -13,18 +19,21 @@
                 <h2>{{ total_employees }}</h2>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="stat-card success">
                 <h5><i class="bi bi-check-circle"></i> Total Paid</h5>
                 <h2>₹{{ total_salaries|floatformat:2 }}</h2>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="stat-card danger">
                 <h5><i class="bi bi-x-circle"></i> Unpaid Salaries</h5>
                 <h2>₹{{ unpaid_salaries|floatformat:2 }}</h2>
             </div>
         </div>
+
         <div class="col-md-3">
             <div class="stat-card info">
                 <h5><i class="bi bi-calendar-month"></i> This Month</h5>
@@ -33,7 +42,9 @@
         </div>
     </div>
 
-    <div class="row">
+    <!-- Chart + Recent Payments -->
+    <div class="row mt-4">
+        <!-- Salary Chart -->
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
@@ -44,6 +55,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Recent Payments -->
         <div class="col-md-4">
             <div class="card">
                 <div class="card-header">
@@ -55,7 +68,10 @@
                             {% for payment in recent_payments %}
                                 <div class="list-group-item">
                                     <strong>{{ payment.salary.employee.full_name }}</strong><br>
-                                    <small>₹{{ payment.salary.net_salary|floatformat:2 }} - {{ payment.payment_date }}</small>
+                                    <small>
+                                        ₹{{ payment.salary.net_salary|floatformat:2 }}
+                                        - {{ payment.payment_date }}
+                                    </small>
                                 </div>
                             {% endfor %}
                         </div>
@@ -66,26 +82,40 @@
             </div>
         </div>
     </div>
+
 {% else %}
-    <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Employee Dashboard</h2>
-    
+
+    <!-- Employee Dashboard -->
+    <h2 class="mb-4">
+        <i class="bi bi-speedometer2"></i> Employee Dashboard
+    </h2>
+
     {% if no_profile %}
+
+        <!-- Profile Missing -->
         <div class="card">
             <div class="card-body text-center">
                 <div class="alert alert-info">
                     <h5><i class="bi bi-info-circle"></i> Profile Not Linked</h5>
-                    <p>Your employee profile is not yet linked to your account.</p>
+                    <p>Your employee profile is not linked to your account.</p>
                     <p>Please contact your administrator to:</p>
                     <ul class="list-unstyled">
                         <li>• Create your employee profile</li>
-                        <li>• Link it to your user account ({{ user.email }})</li>
+                        <li>• Link it with your account ({{ user.email }})</li>
                     </ul>
-                    <p class="mb-0"><strong>Username:</strong> {{ user.username }} | <strong>Email:</strong> {{ user.email }}</p>
+
+                    <p class="mb-0">
+                        <strong>Username:</strong> {{ user.username }}
+                        | <strong>Email:</strong> {{ user.email }}
+                    </p>
                 </div>
             </div>
         </div>
+
     {% elif employee %}
+
         <div class="row">
+            <!-- Employee Info -->
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
@@ -100,12 +130,15 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Salary History -->
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
                         <h5><i class="bi bi-cash-coin"></i> Recent Salaries</h5>
                     </div>
                     <div class="card-body">
+
                         {% if employee_salaries %}
                             <div class="table-responsive">
                                 <table class="table">
@@ -118,12 +151,14 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         {% for salary in employee_salaries %}
                                             <tr>
                                                 <td>{{ salary.get_month_display }}</td>
                                                 <td>{{ salary.year }}</td>
                                                 <td>₹{{ salary.net_salary|floatformat:2 }}</td>
+
                                                 <td>
                                                     {% if salary.is_paid %}
                                                         <span class="badge bg-success">Paid</span>
@@ -131,48 +166,56 @@
                                                         <span class="badge bg-warning">Pending</span>
                                                     {% endif %}
                                                 </td>
+
                                                 <td>
-                                                    <a href="{% url 'salary_detail' salary.pk %}" class="btn btn-sm btn-primary">
+                                                    <a href="{% url 'salary_detail' salary.pk %}"
+                                                       class="btn btn-sm btn-primary">
                                                         <i class="bi bi-eye"></i> View
                                                     </a>
                                                 </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
+
                                 </table>
                             </div>
                         {% else %}
                             <p class="text-muted">No salary records found</p>
                         {% endif %}
+
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Notifications -->
         {% if notifications %}
             <div class="card mt-3">
                 <div class="card-header">
                     <h5><i class="bi bi-bell"></i> Recent Notifications</h5>
                 </div>
                 <div class="card-body">
-                    {% for notification in notifications %}
+                    {% for note in notifications %}
                         <div class="alert alert-info">
-                            <strong>{{ notification.title }}</strong><br>
-                            {{ notification.message }}
-                            <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
+                            <strong>{{ note.title }}</strong><br>
+                            {{ note.message }}<br>
+                            <small class="text-muted">{{ note.created_at|timesince }} ago</small>
                         </div>
                     {% endfor %}
                 </div>
             </div>
         {% endif %}
+
     {% endif %}
 {% endif %}
+
 {% endblock %}
 
 {% block extra_js %}
 {% if user.is_admin_user %}
 <script>
     const ctx = document.getElementById('salaryChart');
+
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -188,19 +231,10 @@
         },
         options: {
             responsive: true,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: {
-                        callback: function(value) {
-                            return '₹' + value.toLocaleString();
-                        }
-                    }
+                    ticks: { callback: value => '₹' + value.toLocaleString() }
                 }
             }
         }
@@ -208,5 +242,3 @@
 </script>
 {% endif %}
 {% endblock %}
-
-

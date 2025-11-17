@@ -199,7 +199,7 @@ def employee_list(request):
             Q(email__icontains=search)
         )
     return render(request, 'employees/employee_list.html', {'employees': employees, 'search': search})
-
+ 
 
 @login_required
 @user_passes_test(is_admin)
