@@ -76,6 +76,9 @@ WSGI_APPLICATION = 'payment_management.wsgi.application'
 
 import os
 import dj_database_url
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -88,7 +91,6 @@ if DATABASE_URL:
         )
     }
 else:
-    # fallback to sqlite for local
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
