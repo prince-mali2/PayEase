@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: django-app
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn projectname.wsgi:application"
+    disk:
+      name: dbdisk
+      mountPath: /opt/render/project/src/db
+      sizeGB: 1
